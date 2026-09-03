@@ -4,6 +4,8 @@
  */
 package br.com.ifba.login.view;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author victo
@@ -80,13 +82,44 @@ public class TelaCadastro extends javax.swing.JFrame {
         btnCadastrar.setBackground(new java.awt.Color(0, 102, 255));
         btnCadastrar.setForeground(new java.awt.Color(255, 255, 255));
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(this::btnCadastrarActionPerformed);
         getContentPane().add(btnCadastrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 340, -1, -1));
 
         btnCancelar.setText("<html><b>Cancelar</b></html>");
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
         getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        // TODO add your handling code here:
+        //Captura e limpa os dados de todos os campos
+        String nome = txtNome.getText().trim();
+        String cpf = txtCpf.getText().trim();
+        String email = txtEmail.getText().trim();
+        String telefone = txtTelefone.getText().trim();
+        String login = txtLogin.getText().trim();
+        String senha = new String(txtSenha.getPassword()).trim();
+        String confirmarSenha = new String(txtConfirmarSenha.getPassword()).trim();
+        
+        //Verifica se algum campo esta vazio
+        if(nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() || login.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }else if(!senha.equals(confirmarSenha)){
+            //verifica se as senhas são diferentes
+            JOptionPane.showMessageDialog(null, "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }else{
+            //Todos os campos preenchidos corretamente
+             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        //fecha a tela
+        this.dispose(); 
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
