@@ -28,91 +28,61 @@ public class TelaLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jblTitulo = new javax.swing.JLabel();
-        jblLogin = new javax.swing.JLabel();
-        jblSenha = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblLogin = new javax.swing.JLabel();
+        lblSenha = new javax.swing.JLabel();
         txtLogin = new javax.swing.JTextField();
         txtSenha = new javax.swing.JPasswordField();
         btnEntrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtMensagem = new javax.swing.JTextArea();
-        jblImagem = new javax.swing.JLabel();
+        lblImagem = new javax.swing.JLabel();
+        lblNaoTemConta = new javax.swing.JLabel();
+        lblCadastreSe = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tela de Login");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jblTitulo.setText("AppBarber");
+        lblTitulo.setText("AppBarber");
+        getContentPane().add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(186, 106, -1, -1));
 
-        jblLogin.setText("Login:");
+        lblLogin.setText("Login:");
+        getContentPane().add(lblLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(57, 137, 37, -1));
 
-        jblSenha.setText("Senha:");
+        lblSenha.setText("Senha:");
+        getContentPane().add(lblSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(57, 162, 37, -1));
 
         txtLogin.addActionListener(this::txtLoginActionPerformed);
+        getContentPane().add(txtLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(149, 134, 134, -1));
+        getContentPane().add(txtSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(149, 159, 134, -1));
 
         btnEntrar.setText("Entrar");
         btnEntrar.addActionListener(this::btnEntrarActionPerformed);
+        getContentPane().add(btnEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(176, 193, -1, -1));
 
         txtMensagem.setColumns(20);
         txtMensagem.setRows(5);
         jScrollPane1.setViewportView(txtMensagem);
 
-        jblImagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ifba/login/imagens/imagemlogin.png"))); // NOI18N
-        jblImagem.setText("jLabel5");
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, 220, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(176, 176, 176)
-                .addComponent(btnEntrar)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(57, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jblLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jblSenha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(55, 55, 55)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(137, 137, 137))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jblTitulo)
-                                    .addGap(176, 176, 176))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(158, 158, 158))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(137, 137, 137)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(100, 100, 100))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jblLogin))
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jblSenha))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(btnEntrar)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
+        lblImagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ifba/login/imagens/imagemlogin.png"))); // NOI18N
+        lblImagem.setText("jLabel5");
+        getContentPane().add(lblImagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(166, 19, 96, 81));
+
+        lblNaoTemConta.setText("Não tem uma Conta?");
+        getContentPane().add(lblNaoTemConta, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, -1, -1));
+
+        lblCadastreSe.setForeground(new java.awt.Color(0, 51, 255));
+        lblCadastreSe.setText("<html><u>Cadastre-se</u></html>");
+        lblCadastreSe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCadastreSe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCadastreSeMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblCadastreSe, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 240, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -123,11 +93,21 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         // TODO add your handling code here:
+        //mostra oq foi digitado na tela
         String loginDigitado = txtLogin.getText();
-         String senhaDigitada = new String(txtSenha.getPassword());
+        String senhaDigitada = new String(txtSenha.getPassword());
         
         txtMensagem.setText("Login digitado: " + loginDigitado + "\nSenha digitada: " + senhaDigitada);
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void lblCadastreSeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastreSeMouseClicked
+        // TODO add your handling code here:
+        //Ao clicar abre a tela de cadastro
+        TelaCadastro telaCadastro = new TelaCadastro();
+        telaCadastro.setVisible(true);
+        //fecha a tela
+        this.dispose(); 
+    }//GEN-LAST:event_lblCadastreSeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -157,10 +137,12 @@ public class TelaLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel jblImagem;
-    private javax.swing.JLabel jblLogin;
-    private javax.swing.JLabel jblSenha;
-    private javax.swing.JLabel jblTitulo;
+    private javax.swing.JLabel lblCadastreSe;
+    private javax.swing.JLabel lblImagem;
+    private javax.swing.JLabel lblLogin;
+    private javax.swing.JLabel lblNaoTemConta;
+    private javax.swing.JLabel lblSenha;
+    private javax.swing.JLabel lblTitulo;
     private javax.swing.JTextField txtLogin;
     private javax.swing.JTextArea txtMensagem;
     private javax.swing.JPasswordField txtSenha;
