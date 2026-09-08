@@ -4,6 +4,7 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.validar.ValidadorUsuario;
 import javax.swing.JOptionPane;
 
 /**
@@ -109,6 +110,8 @@ public class TelaCadastro extends javax.swing.JFrame {
         }else if(!senha.equals(confirmarSenha)){
             //verifica se as senhas são diferentes
             JOptionPane.showMessageDialog(null, "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }else if(ValidadorUsuario.contemPalavraProibida(login)){
+            JOptionPane.showMessageDialog(null, "Login contém palavra não permitida", "Erro", JOptionPane.ERROR_MESSAGE);
         }else{
             //Todos os campos preenchidos corretamente
              JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
