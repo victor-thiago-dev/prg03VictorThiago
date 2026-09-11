@@ -4,6 +4,8 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.entity.Usuario;
+
 /**
  *
  * @author victo
@@ -93,11 +95,12 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         // TODO add your handling code here:
-        //mostra oq foi digitado na tela
-        String loginDigitado = txtLogin.getText();
-        String senhaDigitada = new String(txtSenha.getPassword());
+        Usuario usuario = new Usuario();
         
-        txtMensagem.setText("Login digitado: " + loginDigitado + "\nSenha digitada: " + senhaDigitada);
+        usuario.login = txtLogin.getText();
+        usuario.senha = new String(txtSenha.getPassword());
+        
+        txtMensagem.setText("Login digitado: " + usuario.login + "\nSenha digitada: " + usuario.senha);
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void lblCadastreSeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastreSeMouseClicked
