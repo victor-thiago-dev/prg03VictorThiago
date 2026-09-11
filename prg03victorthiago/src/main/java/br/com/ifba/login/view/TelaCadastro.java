@@ -4,6 +4,7 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import javax.swing.JOptionPane;
 
@@ -104,6 +105,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         String senha = new String(txtSenha.getPassword()).trim();
         String confirmarSenha = new String(txtConfirmarSenha.getPassword()).trim();
         
+        
         //Verifica se algum campo esta vazio
         if(nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() || login.isEmpty()){
             JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -114,6 +116,15 @@ public class TelaCadastro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Login contém palavra não permitida", "Erro", JOptionPane.ERROR_MESSAGE);
         }else{
             //Todos os campos preenchidos corretamente
+            Usuario usuario = new Usuario();
+            
+            usuario.nome = nome;
+            usuario.cpf = cpf;
+            usuario.email = email;
+            usuario.telefone = telefone;
+            usuario.login = login;
+            usuario.senha = senha;
+            
              JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
