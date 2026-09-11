@@ -9,11 +9,11 @@ package br.com.ifba.usuario.entity;
  * @author victo
  */
 public class Usuario {
-    String nome;
-    String cpf;
-    String telefone;
-    String email;
-    String login;
-    String senha;
+   public String nome;
+   public String cpf;
+   public String telefone;
+   public String email;
+   public String login;
+   public String senha;
     
 }
