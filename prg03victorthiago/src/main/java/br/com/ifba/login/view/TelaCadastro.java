@@ -121,7 +121,7 @@ public class TelaCadastro extends javax.swing.JFrame {
             usuario.setEmail(email);
             usuario.setTelefone(telefone);
             
-             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+             JOptionPane.showMessageDialog(null, "Usuário " + usuario.getNome() + " cadastrado com sucesso!");
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
