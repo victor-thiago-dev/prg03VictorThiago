@@ -97,10 +97,10 @@ public class TelaLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         Usuario usuario = new Usuario();
         
-        usuario.login = txtLogin.getText();
-        usuario.senha = new String(txtSenha.getPassword());
+        usuario.setLogin(txtLogin.getText());
+        usuario.setSenha(new String(txtSenha.getPassword()));
         
-        txtMensagem.setText("Login digitado: " + usuario.login + "\nSenha digitada: " + usuario.senha);
+        txtMensagem.setText("Login digitado: " + usuario.getLogin() + "\nSenha digitada: " + usuario.getSenha());
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void lblCadastreSeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastreSeMouseClicked
