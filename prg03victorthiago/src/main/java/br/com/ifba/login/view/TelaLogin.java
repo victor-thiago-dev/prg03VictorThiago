@@ -95,10 +95,18 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         // TODO add your handling code here:
+        String login = txtLogin.getText();
+        String senha = new String(txtSenha.getPassword());
         Usuario usuario = new Usuario();
         
-        usuario.setLogin(txtLogin.getText());
-        usuario.setSenha(new String(txtSenha.getPassword()));
+        usuario.setLogin(login);
+        usuario.setSenha(senha);
+        
+        if(usuario.autenticar(login, senha)){
+            javax.swing.JOptionPane.showMessageDialog(this, "Acesso liberado!", "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(this, "Login ou senha incorretos.", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
         
         txtMensagem.setText("Login digitado: " + usuario.getLogin() + "\nSenha digitada: " + usuario.getSenha());
     }//GEN-LAST:event_btnEntrarActionPerformed
