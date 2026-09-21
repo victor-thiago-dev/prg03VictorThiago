@@ -107,21 +107,27 @@ public class TelaCadastro extends javax.swing.JFrame {
         
         
         //Verifica se algum campo esta vazio
-        if(nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() || login.isEmpty()){
+        if (!ValidadorUsuario.camposPreenchidos(nome, cpf, email, telefone, login, senha, confirmarSenha)) {
             JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
-        }else if(!senha.equals(confirmarSenha)){
+        } else if (!ValidadorUsuario.cpfValido(cpf)) {
+            //verifica se o CPF tem 11 dígitos numéricos
+            JOptionPane.showMessageDialog(null, "CPF inválido!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else if (!ValidadorUsuario.senhaForte(senha)) {
+            //verifica o tamanho mínimo da senha
+            JOptionPane.showMessageDialog(null, "A senha deve ter no mínimo " + ValidadorUsuario.TAMANHO_MINIMO_SENHA + " caracteres!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else if (!ValidadorUsuario.senhasIguais(senha, confirmarSenha)) {
             //verifica se as senhas são diferentes
             JOptionPane.showMessageDialog(null, "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
-        }else if(ValidadorUsuario.contemPalavraProibida(login)){
+        } else if (ValidadorUsuario.contemPalavraProibida(login)) {
             JOptionPane.showMessageDialog(null, "Login contém palavra não permitida", "Erro", JOptionPane.ERROR_MESSAGE);
-        }else{
+        } else {
             //Todos os campos preenchidos corretamente
             Usuario usuario = new Usuario(nome, cpf, login, senha);
-            
+
             usuario.setEmail(email);
             usuario.setTelefone(telefone);
-            
-             JOptionPane.showMessageDialog(null, "Usuário " + usuario.getNome() + " cadastrado com sucesso!");
+
+            JOptionPane.showMessageDialog(null, "Usuário " + usuario.getNome() + " cadastrado com sucesso!");
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
