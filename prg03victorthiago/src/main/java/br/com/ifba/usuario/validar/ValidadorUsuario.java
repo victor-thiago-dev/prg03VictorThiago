@@ -13,6 +13,9 @@ public class ValidadorUsuario {
     public static final int TAMANHO_MINIMO_SENHA = 8;
      
     public static boolean contemPalavraProibida(String texto){
+        if (texto == null) {
+        return false;
+        }
         //declara array com palavras proibidas
         String[] palavrasProibidas = {"admin", "administrador", "root", "support", "moderator", "webmaster",
         "teste", "senha123"};
