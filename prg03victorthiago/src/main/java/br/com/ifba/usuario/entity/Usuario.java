@@ -21,7 +21,7 @@ public class Usuario implements Autenticavel {
    private String email;
    private String login;
    private String senha;
-   private StatusUsuario status;
+   private StatusUsuario status = StatusUsuario.ATIVO;
    private final List<Perfil> perfis = new ArrayList<>();
    private Perfil perfilAtivo;
    
@@ -31,19 +31,7 @@ public class Usuario implements Autenticavel {
 
     public Usuario() {
     }
-
-    public Usuario(StatusUsuario status) {
-        this.status = status.ATIVO;
-    }
-
-    public Usuario(String nome, String telefone, String login, String senha, StatusUsuario status) {
-        this.nome = nome;
-        this.telefone = telefone;
-        this.login = login;
-        this.senha = senha;
-        this.status = status.ATIVO;
-    }
-    
+ 
     public Usuario(String nome, String cpf, String login, String senha) {
         this.nome = nome;
         this.cpf = cpf;
