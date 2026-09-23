@@ -122,6 +122,12 @@ public class Usuario implements Autenticavel {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-   
-    
+
+    public StatusUsuario getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusUsuario status) {
+        this.status = status;
+    }   
 }
