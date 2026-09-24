@@ -9,14 +9,14 @@ package br.com.ifba.usuario.entity;
  * @author victo
  */
 public class Perfil {
-    private TipoUsuario tipo;
+    private String nome;
     private String descricao;
 
     public Perfil() {
     }
 
-    public Perfil(TipoUsuario tipo, String descricao) {
-        this.tipo = tipo;
+    public Perfil(String nome, String descricao) {
+        this.nome = nome;
         this.descricao = descricao;
     }
 
@@ -28,11 +28,11 @@ public class Perfil {
         this.descricao = descricao;
     }
 
-    public TipoUsuario getTipo() {
-        return tipo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setTipo(TipoUsuario tipo) {
-        this.tipo = tipo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }
