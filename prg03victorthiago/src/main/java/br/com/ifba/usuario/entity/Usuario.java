@@ -82,5 +82,9 @@ public class Usuario implements Autenticavel {
 
     public void setStatus(StatusUsuario status) {
         this.status = status;
-    }   
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
 }
