@@ -14,8 +14,9 @@ public class Barbeiro extends Pessoa{
     
     private String especialidade;
 
-    public Barbeiro(String nome, String cpf, String telefone, String email) {
+    public Barbeiro(String nome, String cpf, String telefone, String email, String especialidade) {
         super(nome, cpf, telefone, email);
+        this.especialidade = especialidade;
     }
     
 }
