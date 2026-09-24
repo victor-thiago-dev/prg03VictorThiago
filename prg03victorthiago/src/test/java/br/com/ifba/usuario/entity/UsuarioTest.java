@@ -6,37 +6,44 @@ package br.com.ifba.usuario.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import br.com.ifba.cliente.entity.Cliente;
+import br.com.ifba.barbeiro.entity.Barbeiro;
  
 class UsuarioTest {
  
     @Test
     void deveRetornarTrueSeCredenciaisCorretas() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         assertTrue(usuario.autenticar("victor", "senha1234"));
     }
  
     @Test
     void deveRetornarFalseSeSenhaIncorreta() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         assertFalse(usuario.autenticar("victor", "senhaerrada"));
     }
-    
-     @Test
+ 
+    @Test
     void deveNascerComStatusAtivo() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         assertEquals(StatusUsuario.ATIVO, usuario.getStatus());
     }
  
     @Test
     void deveAlterarStatusParaInativo() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         usuario.setStatus(StatusUsuario.INATIVO);
         assertEquals(StatusUsuario.INATIVO, usuario.getStatus());
     }
  
     @Test
     void deveAumentarListaDePerfisAoAdicionar() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
  
         usuario.adicionarPerfil(new Perfil(TipoUsuario.CLIENTE, "Cliente"));
  
@@ -45,7 +52,8 @@ class UsuarioTest {
  
     @Test
     void devePermitirMaisDeUmPerfilParaOMesmoUsuario() {
-        Usuario usuario = new Usuario("Ana", "98765432100", "ana.barbeira", "senhaForte1");
+        Barbeiro barbeiro = new Barbeiro("Ana", "98765432100", "77988887777", "ana@email.com", "Corte masculino");
+        Usuario usuario = new Usuario(barbeiro, "ana.barbeira", "senhaForte1");
  
         usuario.adicionarPerfil(new Perfil(TipoUsuario.BARBEIRO, "Barbeira titular"));
         usuario.adicionarPerfil(new Perfil(TipoUsuario.CLIENTE, "Cliente da própria barbearia"));
@@ -55,39 +63,43 @@ class UsuarioTest {
  
     @Test
     void deveLancarExcecaoAoTentarModificarListaDePerfisPorFora() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         usuario.adicionarPerfil(new Perfil(TipoUsuario.CLIENTE, "Cliente"));
  
         assertThrows(UnsupportedOperationException.class,
             () -> usuario.getPerfis().add(new Perfil(TipoUsuario.ADMIN, "Admin")));
     }
-
+ 
     @Test
     void devePrimeiroPerfilVirarOAtivoAutomaticamente() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
-        Perfil cliente = new Perfil(TipoUsuario.CLIENTE, "Cliente");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
+        Perfil perfilCliente = new Perfil(TipoUsuario.CLIENTE, "Cliente");
  
-        usuario.adicionarPerfil(cliente);
+        usuario.adicionarPerfil(perfilCliente);
  
-        assertSame(cliente, usuario.getPerfilAtivo());
+        assertSame(perfilCliente, usuario.getPerfilAtivo());
     }
  
     @Test
     void deveTrocarPerfilAtivoSeUsuarioPossuiOPerfil() {
-        Usuario usuario = new Usuario("Ana", "98765432100", "ana.barbeira", "senhaForte1");
-        Perfil barbeiro = new Perfil(TipoUsuario.BARBEIRO, "Barbeira titular");
-        Perfil cliente = new Perfil(TipoUsuario.CLIENTE, "Cliente");
-        usuario.adicionarPerfil(barbeiro);
-        usuario.adicionarPerfil(cliente);
+        Barbeiro barbeiro = new Barbeiro("Ana", "98765432100", "77988887777", "ana@email.com", "Corte masculino");
+        Usuario usuario = new Usuario(barbeiro, "ana.barbeira", "senhaForte1");
+        Perfil perfilBarbeiro = new Perfil(TipoUsuario.BARBEIRO, "Barbeira titular");
+        Perfil perfilCliente = new Perfil(TipoUsuario.CLIENTE, "Cliente");
+        usuario.adicionarPerfil(perfilBarbeiro);
+        usuario.adicionarPerfil(perfilCliente);
  
-        usuario.setPerfilAtivo(cliente);
+        usuario.setPerfilAtivo(perfilCliente);
  
-        assertSame(cliente, usuario.getPerfilAtivo());
+        assertSame(perfilCliente, usuario.getPerfilAtivo());
     }
  
     @Test
     void deveLancarExcecaoSeAtivarPerfilQueUsuarioNaoPossui() {
-        Usuario usuario = new Usuario("Victor", "12345678901", "victor", "senha1234");
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
         usuario.adicionarPerfil(new Perfil(TipoUsuario.CLIENTE, "Cliente"));
         Perfil admin = new Perfil(TipoUsuario.ADMIN, "Admin"); // nunca foi adicionado a esse usuário
  
