@@ -6,8 +6,8 @@ package br.com.ifba.usuario.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import br.com.ifba.cliente.entity.Cliente;
-import br.com.ifba.barbeiro.entity.Barbeiro;
+import br.com.ifba.pessoa.entity.Cliente;
+import br.com.ifba.pessoa.entity.Barbeiro;
  
 class UsuarioTest {
  
