@@ -4,7 +4,7 @@
  */
 package br.com.ifba.login.view;
 
-import br.com.ifba.cliente.entity.Cliente;
+import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import javax.swing.JOptionPane;
