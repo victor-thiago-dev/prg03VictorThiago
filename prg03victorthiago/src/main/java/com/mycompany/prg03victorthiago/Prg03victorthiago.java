@@ -14,7 +14,10 @@ import br.com.ifba.pessoa.entity.Pessoa;
  * @author victo
  */
 public class Prg03victorthiago {
-
+    public static String apresentarPessoa(Pessoa pessoa){
+        return pessoa.descreverFuncao();
+    }
+    
     public static void main(String[] args) {
         Pessoa administrador = new Admin("Victor", "11111111111", "74999999999", "123@gmail.com");
         Pessoa barbeiro = new Barbeiro("Thiago", "11111111111", "74999999999", "123@gmail.com", "Corte Masculino");
@@ -24,6 +27,8 @@ public class Prg03victorthiago {
         System.out.println(barbeiro.descreverFuncao());
         System.out.println(cliente.descreverFuncao());
         
+        System.out.println(apresentarPessoa(cliente));
+        System.out.println(apresentarPessoa(barbeiro));
         
     }
 }
