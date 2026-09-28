@@ -16,5 +16,8 @@ public class Admin extends Pessoa {
         super(nome, cpf, telefone, email);
     }
     
-    
+    @Override
+    public String descreverFuncao() {
+        return getNome() + " é administrador e gerencia os usuários do sistema";
+    } 
 }

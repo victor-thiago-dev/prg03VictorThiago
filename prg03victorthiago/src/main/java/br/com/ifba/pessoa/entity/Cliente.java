@@ -15,7 +15,9 @@ public class Cliente extends Pessoa{
     public Cliente(String nome, String cpf, String telefone, String email) {
         super(nome, cpf, telefone, email);
     }
-    
-    
-    
+
+    @Override
+    public String descreverFuncao() {
+        return getNome() + " é cliente e agenda serviços na barbearia"; 
+    }
 }

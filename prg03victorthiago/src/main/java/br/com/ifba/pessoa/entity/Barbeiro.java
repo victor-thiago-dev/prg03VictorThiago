@@ -18,5 +18,9 @@ public class Barbeiro extends Pessoa{
         super(nome, cpf, telefone, email);
         this.especialidade = especialidade;
     }
-    
+
+    @Override
+    public String descreverFuncao() {
+        return "Barbeiro: "+ getNome()+ ", especialidade: "+this.especialidade;
+    } 
 }
