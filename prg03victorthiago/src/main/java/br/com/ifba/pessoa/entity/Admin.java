@@ -4,8 +4,6 @@
  */
 package br.com.ifba.pessoa.entity;
 
-import br.com.ifba.pessoa.entity.Pessoa;
-
 /**
  *
  * @author victo
