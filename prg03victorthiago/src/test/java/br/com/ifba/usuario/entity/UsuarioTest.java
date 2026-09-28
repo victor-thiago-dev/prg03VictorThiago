@@ -105,4 +105,24 @@ class UsuarioTest {
  
         assertThrows(IllegalArgumentException.class, () -> usuario.setPerfilAtivo(admin));
     }
+    
+    @Test
+    void deveNascerSemPerfilAtivoQuandoUsaConstrutorDe3Parametros() {
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
+
+        assertTrue(usuario.getPerfis().isEmpty());
+        assertNull(usuario.getPerfilAtivo());
+    }
+
+    @Test
+    void deveAdicionarEAtivarPerfilQuandoUsaConstrutorDe4Parametros() {
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Perfil perfil = new Perfil("Cliente", "Pode agendar serviços");
+
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234", perfil);
+
+        assertEquals(1, usuario.getPerfis().size());
+        assertSame(perfil, usuario.getPerfilAtivo());
+    }
 }
