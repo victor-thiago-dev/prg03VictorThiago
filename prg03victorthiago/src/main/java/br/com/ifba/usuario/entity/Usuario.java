@@ -23,6 +23,7 @@ public class Usuario implements Autenticavel {
    private final List<Perfil> perfis = new ArrayList<>();
    private Perfil perfilAtivo;
    
+   @Override
     public boolean autenticar(String login, String senha) {
         return this.login.equals(login) && this.senha.equals(senha);
     }
@@ -35,8 +36,13 @@ public class Usuario implements Autenticavel {
         this.login = login;
         this.senha = senha;
     }
-
-    public void adicionarPerfil(Perfil perfil) {
+    
+    public Usuario(Pessoa pessoa, String login, String senha, Perfil perfil) {
+        this(pessoa, login, senha);
+        adicionarPerfil(perfil);
+    }
+    
+    public final void adicionarPerfil(Perfil perfil) {
         if (perfil != null && !perfis.contains(perfil)) {
             perfis.add(perfil);
             if (perfilAtivo == null) {
