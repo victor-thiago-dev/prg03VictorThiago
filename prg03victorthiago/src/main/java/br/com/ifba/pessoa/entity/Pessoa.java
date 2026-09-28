@@ -21,6 +21,8 @@ public abstract class Pessoa {
         this.telefone = telefone;
         this.email = email;
     }
+    
+    public abstract String descreverFuncao();
 
     public String getNome() {
         return nome;
