@@ -129,7 +129,7 @@ class ValidadorUsuarioTest {
         assertThrows(IllegalArgumentException.class, () -> usuario.setLogin("admin"));
     }
     
-     @Test
+    @Test
     void deveRetornarTrueSeContemPalavraProibidaCaixaAlta() {
         assertTrue(ValidadorUsuario.contemPalavraProibida("ADMIN"));
     }
