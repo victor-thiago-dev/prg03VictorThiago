@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.validar;
-
+import br.com.ifba.pessoa.entity.Cliente;
+import br.com.ifba.usuario.entity.Usuario;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
  
@@ -110,5 +111,31 @@ class ValidadorUsuarioTest {
     @Test 
     void deveRetornarFalsePalavraProibidaNull(){ 
         assertFalse(ValidadorUsuario.contemPalavraProibida(null)); 
+    }
+    
+    @Test
+    void deveLancarExcecaoSeSetSenhaReceberSenhaFraca() {
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
+
+        assertThrows(IllegalArgumentException.class, () -> usuario.setSenha("123"));
+    }
+    
+    @Test
+    void deveLancarExcecaoSeSetLoginReceberPalavraProibida() {
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        Usuario usuario = new Usuario(cliente, "victor", "senha1234");
+
+        assertThrows(IllegalArgumentException.class, () -> usuario.setLogin("admin"));
+    }
+    
+    @Test
+    void deveRetornarTrueSeContemPalavraProibidaCaixaAlta() {
+        assertTrue(ValidadorUsuario.contemPalavraProibida("ADMIN"));
+    }
+
+    @Test
+    void deveRetornarFalseSePalavraProibidaEstaDentroDeOutroTexto() {
+        assertFalse(ValidadorUsuario.contemPalavraProibida("admin123"));
     }
 }

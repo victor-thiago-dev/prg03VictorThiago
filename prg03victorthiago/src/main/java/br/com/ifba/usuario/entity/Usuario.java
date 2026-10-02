@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
 import br.com.ifba.pessoa.entity.Pessoa;
+import br.com.ifba.usuario.validar.ValidadorUsuario;
 
 /**
  *
@@ -70,17 +71,23 @@ public class Usuario implements Autenticavel {
         return login;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+public void setLogin(String login) {
+    if (ValidadorUsuario.contemPalavraProibida(login)) {
+        throw new IllegalArgumentException("Login contém palavra não permitida.");
     }
+    this.login = login;
+}
 
     public String getSenha() {
         return senha;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+public void setSenha(String senha) {
+    if (!ValidadorUsuario.senhaForte(senha)) {
+        throw new IllegalArgumentException("Senha não atende ao tamanho mínimo.");
     }
+    this.senha = senha;
+}
 
     public StatusUsuario getStatus() {
         return status;

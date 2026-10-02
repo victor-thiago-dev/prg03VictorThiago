@@ -21,7 +21,7 @@ public class ValidadorUsuario {
         "teste", "senha123"};
         //compara se o texto é igual a alguma palavra proibida
         for (String palavraProibida : palavrasProibidas) {
-            if(texto.equals(palavraProibida)){
+            if(texto.equalsIgnoreCase(palavraProibida)){
                 return true;
             }
         }
