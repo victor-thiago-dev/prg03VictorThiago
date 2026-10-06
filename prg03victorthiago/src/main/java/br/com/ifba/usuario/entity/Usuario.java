@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.ArrayList;
 import br.com.ifba.pessoa.entity.Pessoa;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
+import java.util.Objects;
 
 /**
  *
@@ -99,5 +100,27 @@ public void setSenha(String senha) {
 
     public Pessoa getPessoa() {
         return pessoa;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(this.login);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Usuario other = (Usuario) obj;
+        return Objects.equals(this.login, other.login);
     }
 }

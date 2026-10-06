@@ -4,6 +4,7 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.repositorio.RepositorioUsuarioEmMemoria;
 import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
@@ -16,12 +17,15 @@ import javax.swing.JOptionPane;
 public class TelaCadastro extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCadastro.class.getName());
+    private final RepositorioUsuarioEmMemoria repositorio;
+
 
     /**
      * Creates new form TelaCadastro
      */
     public TelaCadastro() {
         initComponents();
+        this.repositorio = new RepositorioUsuarioEmMemoria();
     }
 
     /**
@@ -125,6 +129,7 @@ public class TelaCadastro extends javax.swing.JFrame {
             //Todos os campos preenchidos corretamente
             Cliente cliente = new Cliente(nome, cpf, telefone, email);
             Usuario usuario = new Usuario(cliente, login, senha);
+            repositorio.cadastrar(usuario);
 
             JOptionPane.showMessageDialog(null, "Usuário " + cliente.getNome() + " cadastrado com sucesso!");
         }
