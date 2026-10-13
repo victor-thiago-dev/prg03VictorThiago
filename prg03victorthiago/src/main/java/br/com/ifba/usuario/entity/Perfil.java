@@ -4,12 +4,24 @@
  */
 package br.com.ifba.usuario.entity;
 
-/**
- *
- * @author victo
- */
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "perfis")
 public class Perfil {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome", nullable = false, unique = true, length = 50)
     private String nome;
+
+    @Column(name = "descricao", length = 255)
     private String descricao;
 
     public Perfil() {
@@ -20,6 +32,11 @@ public class Perfil {
         this.descricao = descricao;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    
     public String getDescricao() {
         return descricao;
     }
