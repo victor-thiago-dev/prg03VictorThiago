@@ -11,21 +11,45 @@ import java.util.ArrayList;
 import br.com.ifba.pessoa.entity.Pessoa;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
-/**
- *
- * @author victo
- */
+@Entity
+@Table(name = "usuarios")
 public class Usuario implements Autenticavel {
     
-   private Pessoa pessoa;
-   private String login;
-   private String senha;
-   private StatusUsuario status = StatusUsuario.ATIVO;
-   private final List<Perfil> perfis = new ArrayList<>();
-   private Perfil perfilAtivo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "login", nullable = false, unique = true, length = 50)
+    private String login;
+
+    @Column(name = "senha", nullable = false)
+    private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 10)
+    private StatusUsuario status = StatusUsuario.ATIVO;
+
+    // RELACIONAMENTOS: ficam para a Parte 2 (por enquanto o Hibernate ignora)
+    @Transient
+    private Pessoa pessoa;
+
+    @Transient
+    private final List<Perfil> perfis = new ArrayList<>();
+
+    @Transient
+    private Perfil perfilAtivo;
    
-   @Override
+    @Override
     public boolean autenticar(String login, String senha) {
         return this.login.equals(login) && this.senha.equals(senha);
     }
@@ -51,6 +75,10 @@ public class Usuario implements Autenticavel {
                 perfilAtivo = perfil;
             }
         }
+    }
+    
+    public Long getId() {
+        return id;
     }
  
     public List<Perfil> getPerfis() {

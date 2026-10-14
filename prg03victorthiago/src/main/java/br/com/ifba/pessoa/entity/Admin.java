@@ -4,12 +4,15 @@
  */
 package br.com.ifba.pessoa.entity;
 
-/**
- *
- * @author victo
- */
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("ADMIN")
 public class Admin extends Pessoa {
 
+    protected Admin() { }
+    
     public Admin(String nome, String cpf, String telefone, String email) {
         super(nome, cpf, telefone, email);
     }

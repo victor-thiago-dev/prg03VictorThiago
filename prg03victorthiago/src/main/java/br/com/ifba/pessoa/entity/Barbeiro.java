@@ -4,13 +4,19 @@
  */
 package br.com.ifba.pessoa.entity;
 
-/**
- *
- * @author victo
- */
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("BARBEIRO")
 public class Barbeiro extends Pessoa{
     
+     // nullable (padrão): na tabela única, Cliente e Admin deixam essa coluna vazia
+    @Column(name = "especialidade", length = 100)
     private String especialidade;
+    
+    protected Barbeiro() { }
 
     public Barbeiro(String nome, String cpf, String telefone, String email, String especialidade) {
         super(nome, cpf, telefone, email);

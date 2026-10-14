@@ -4,12 +4,18 @@
  */
 package br.com.ifba.pessoa.entity;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 /**
  *
  * @author victo
  */
+@Entity
+@DiscriminatorValue("CLIENTE")
 public class Cliente extends Pessoa{
-
+    
+    protected Cliente() { }
+    
     public Cliente(String nome, String cpf, String telefone, String email) {
         super(nome, cpf, telefone, email);
     }
