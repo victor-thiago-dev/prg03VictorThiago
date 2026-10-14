@@ -10,3 +10,6 @@ dist/
 # IDE
 .idea/
 *.iml
+
+# Credenciais do banco (versionar só o .exemplo)
+**/src/main/resources/META-INF/persistence.xml
