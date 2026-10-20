@@ -4,9 +4,16 @@
  */
 package br.com.ifba.usuario.view;
 
-import br.com.ifba.login.view.TelaCadastro;
+import br.com.ifba.infrastructure.util.JPAUtil;
 import br.com.ifba.usuario.entity.StatusUsuario;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
+import br.com.ifba.usuario.repositorio.UsuarioRepositorioJpa;
+import jakarta.persistence.PersistenceException;
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,14 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 public class UsuarioListagemView extends JFrame {
+
+    private final UsuarioRepositorioJpa repositorio = new UsuarioRepositorioJpa();
 
     private final DefaultTableModel modelo = new DefaultTableModel(
             new Object[]{"Login", "Nome", "Status"}, 0) {
@@ -33,8 +38,8 @@ public class UsuarioListagemView extends JFrame {
         }
     };
     private final JTable tabela = new JTable(modelo);
-    private final TableRowSorter<DefaultTableModel> filtro = new TableRowSorter<>(modelo);
     private final JTextField txtBusca = new JTextField(20);
+    private final JButton btnBuscar = new JButton("Buscar");
     private final JButton btnNovo = new JButton("+ Novo");
     private final JButton btnEditar = new JButton("Editar");
     private final JButton btnRemover = new JButton("Remover");
@@ -42,10 +47,19 @@ public class UsuarioListagemView extends JFrame {
     public UsuarioListagemView() {
         super("Usuários");
         montarTela();
-        carregarExemplos();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(650, 400);
         setLocationRelativeTo(null);
+
+        // fecha a fábrica do JPA ao encerrar a aplicação
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                JPAUtil.fechar();
+            }
+        });
+
+        carregar();
     }
 
     private void montarTela() {
@@ -55,11 +69,11 @@ public class UsuarioListagemView extends JFrame {
         JPanel busca = new JPanel(new BorderLayout(5, 0));
         busca.add(new JLabel("Procurar:"), BorderLayout.WEST);
         busca.add(txtBusca, BorderLayout.CENTER);
+        busca.add(btnBuscar, BorderLayout.EAST);
         topo.add(busca, BorderLayout.CENTER);
         topo.add(btnNovo, BorderLayout.EAST);
 
         // centro: tabela
-        tabela.setRowSorter(filtro);
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
@@ -72,30 +86,34 @@ public class UsuarioListagemView extends JFrame {
         add(scroll, BorderLayout.CENTER);
         add(rodape, BorderLayout.SOUTH);
 
-        // busca: filtra a lista enquanto digita
-        txtBusca.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { filtrar(); }
-            public void removeUpdate(DocumentEvent e) { filtrar(); }
-            public void changedUpdate(DocumentEvent e) { filtrar(); }
-        });
-
+        btnBuscar.addActionListener(e -> carregar());
+        txtBusca.addActionListener(e -> carregar()); // Enter no campo
         btnNovo.addActionListener(e -> abrirCadastro());
         btnEditar.addActionListener(e -> editar());
         btnRemover.addActionListener(e -> remover());
     }
 
-    private void filtrar() {
+    // lista tudo, ou busca por JPQL se houver texto no campo
+    private void carregar() {
         String texto = txtBusca.getText().trim();
-        filtro.setRowFilter(texto.isEmpty() ? null : RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(texto)));
+        modelo.setRowCount(0);
+        try {
+            List<Usuario> usuarios = texto.isEmpty()
+                    ? repositorio.listarTodos()
+                    : repositorio.buscarPorTexto(texto);
+            for (Usuario u : usuarios) {
+                modelo.addRow(new Object[]{u.getLogin(), u.getPessoa().getNome(), u.getStatus().name()});
+            }
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível carregar os usuários. Verifique se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // abre a TelaCadastro já existente
     private void abrirCadastro() {
-        TelaCadastro tela = new TelaCadastro();
-        // a TelaCadastro fecha o programa inteiro por padrão; aqui só fecha ela
-        tela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        tela.setLocationRelativeTo(this);
-        tela.setVisible(true);
+        new UsuarioCadastroView(this).setVisible(true); // modal: continua aqui ao fechar
+        carregar();
     }
 
     private void editar() {
@@ -104,11 +122,11 @@ public class UsuarioListagemView extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um usuário na lista.");
             return;
         }
-        int m = tabela.convertRowIndexToModel(linha);
-        String login = (String) modelo.getValueAt(m, 0);
-        String nome = (String) modelo.getValueAt(m, 1);
-        StatusUsuario status = StatusUsuario.valueOf((String) modelo.getValueAt(m, 2));
+        String login = (String) modelo.getValueAt(linha, 0);
+        String nome = (String) modelo.getValueAt(linha, 1);
+        StatusUsuario status = StatusUsuario.valueOf((String) modelo.getValueAt(linha, 2));
         new UsuarioEdicaoView(this, login, nome, status).setVisible(true);
+        carregar();
     }
 
     private void remover() {
@@ -117,20 +135,24 @@ public class UsuarioListagemView extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um usuário na lista.");
             return;
         }
-        int m = tabela.convertRowIndexToModel(linha);
+        String login = (String) modelo.getValueAt(linha, 0);
         int resposta = JOptionPane.showConfirmDialog(this,
-                "Deseja excluir o usuário \"" + modelo.getValueAt(m, 0) + "\"?",
+                "Deseja excluir o usuário \"" + login + "\"?",
                 "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
-        if (resposta == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this, "A exclusão será feita na Parte 2.");
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
         }
-    }
-
-    // linhas fixas só para visualizar a tela; saem na Parte 2, quando vier do banco
-    private void carregarExemplos() {
-        modelo.addRow(new Object[]{"joao.silva", "João Silva", "ATIVO"});
-        modelo.addRow(new Object[]{"maria.souza", "Maria Souza", "ATIVO"});
-        modelo.addRow(new Object[]{"carlos.lima", "Carlos Lima", "INATIVO"});
+        try {
+            repositorio.remover(login);
+            JOptionPane.showMessageDialog(this, "Usuário removido com sucesso.");
+        } catch (UsuarioNaoEncontradoException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível remover. Verifique se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        carregar();
     }
 
     public static void main(String[] args) {

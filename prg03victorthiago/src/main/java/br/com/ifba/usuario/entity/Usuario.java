@@ -20,6 +20,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 @Table(name = "usuarios")
@@ -39,8 +43,10 @@ public class Usuario implements Autenticavel {
     @Column(name = "status", nullable = false, length = 10)
     private StatusUsuario status = StatusUsuario.ATIVO;
 
-    // RELACIONAMENTOS: ficam para a Parte 2 (por enquanto o Hibernate ignora)
-    @Transient
+    // O cascade = ALL faz o Hibernate salvar e apagar a Pessoa junto com o Usuario.
+    //O EAGER traz a pessoa na mesma consulta, e a listagem precisa do nome
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 
     @Transient

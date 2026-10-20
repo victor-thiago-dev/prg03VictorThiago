@@ -4,8 +4,12 @@ package br.com.ifba.usuario.view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.entity.StatusUsuario;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.repositorio.UsuarioRepositorioJpa;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
+import jakarta.persistence.PersistenceException;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -24,26 +28,21 @@ import javax.swing.JTextField;
 
 public class UsuarioCadastroView extends JDialog {
 
-    protected final JTextField txtNome = new JTextField(20);
-    protected final JTextField txtCpf = new JTextField(20);
-    protected final JTextField txtTelefone = new JTextField(20);
-    protected final JTextField txtEmail = new JTextField(20);
-    protected final JTextField txtLogin = new JTextField(20);
-    protected final JPasswordField txtSenha = new JPasswordField(20);
-    protected final JPasswordField txtConfirmarSenha = new JPasswordField(20);
-    protected final JComboBox<StatusUsuario> cmbStatus = new JComboBox<>(StatusUsuario.values());
-    protected final JButton btnSalvar = new JButton("Salvar");
-    protected final JButton btnCancelar = new JButton("Cancelar");
+    private final UsuarioRepositorioJpa repositorio = new UsuarioRepositorioJpa();
 
-    // a edição muda para false: lá a senha só é validada se for preenchida
-    protected boolean exigirSenha = true;
+    private final JTextField txtNome = new JTextField(20);
+    private final JTextField txtCpf = new JTextField(20);
+    private final JTextField txtTelefone = new JTextField(20);
+    private final JTextField txtEmail = new JTextField(20);
+    private final JTextField txtLogin = new JTextField(20);
+    private final JPasswordField txtSenha = new JPasswordField(20);
+    private final JPasswordField txtConfirmarSenha = new JPasswordField(20);
+    private final JComboBox<StatusUsuario> cmbStatus = new JComboBox<>(StatusUsuario.values());
+    private final JButton btnSalvar = new JButton("Salvar");
+    private final JButton btnCancelar = new JButton("Cancelar");
 
     public UsuarioCadastroView(Frame parent) {
-        this(parent, "Cadastrar usuário");
-    }
-
-    protected UsuarioCadastroView(Frame parent, String titulo) {
-        super(parent, titulo, true);
+        super(parent, "Cadastrar usuário", true);
         montarTela();
         pack();
         setLocationRelativeTo(parent);
@@ -90,32 +89,50 @@ public class UsuarioCadastroView extends JDialog {
         painel.add(campo, c);
     }
 
-    // só valida os campos; a gravação no banco fica para a Parte 2
     private void salvar() {
+        String nome = txtNome.getText().trim();
+        String cpf = txtCpf.getText().trim();
+        String telefone = txtTelefone.getText().trim();
+        String email = txtEmail.getText().trim();
+        String login = txtLogin.getText().trim();
         String senha = new String(txtSenha.getPassword());
         String confirmar = new String(txtConfirmarSenha.getPassword());
 
-        if (!ValidadorUsuario.camposPreenchidos(txtNome.getText(), txtCpf.getText(),
-                txtTelefone.getText(), txtEmail.getText(), txtLogin.getText())) {
+        if (!ValidadorUsuario.camposPreenchidos(nome, cpf, telefone, email, login)) {
             aviso("Preencha todos os campos.");
             return;
         }
-        if (!ValidadorUsuario.cpfValido(txtCpf.getText())) {
+        if (!ValidadorUsuario.cpfValido(cpf)) {
             aviso("CPF inválido.");
             return;
         }
-        if (exigirSenha || !senha.isEmpty()) {
-            if (!ValidadorUsuario.senhaForte(senha)) {
-                aviso("A senha deve ter no mínimo " + ValidadorUsuario.TAMANHO_MINIMO_SENHA + " caracteres.");
-                return;
-            }
-            if (!ValidadorUsuario.senhasIguais(senha, confirmar)) {
-                aviso("As senhas não conferem.");
-                return;
-            }
+        if (ValidadorUsuario.contemPalavraProibida(login)) {
+            aviso("Login contém palavra não permitida.");
+            return;
         }
-        JOptionPane.showMessageDialog(this, "Dados válidos. A gravação será feita na Parte 2.");
-        dispose();
+        if (!ValidadorUsuario.senhaForte(senha)) {
+            aviso("A senha deve ter no mínimo " + ValidadorUsuario.TAMANHO_MINIMO_SENHA + " caracteres.");
+            return;
+        }
+        if (!ValidadorUsuario.senhasIguais(senha, confirmar)) {
+            aviso("As senhas não conferem.");
+            return;
+        }
+
+        try {
+            Usuario usuario = new Usuario(new Cliente(nome, cpf, telefone, email), login, senha);
+            usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
+            repositorio.cadastrar(usuario);
+            JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso.");
+            dispose();
+        } catch (IllegalArgumentException e) {
+            aviso(e.getMessage());
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível salvar. Verifique se CPF, e-mail ou login já estão "
+                    + "cadastrados e se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void aviso(String mensagem) {
