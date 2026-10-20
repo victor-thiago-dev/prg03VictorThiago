@@ -6,6 +6,7 @@ package br.com.ifba.usuario.repositorio;
 
 import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
  
@@ -37,11 +38,34 @@ class RepositorioUsuarioEmMemoriaTest {
         assertEquals(usuario2, repositorio.buscarPorLogin("ana"));
     }
  
+    // Task 08: a exceção é lançada quando deve
     @Test
-    void deveRetornarNullAoBuscarPorLoginQueNaoExiste() {
+    void deveLancarExcecaoAoBuscarPorLoginQueNaoExiste() {
         RepositorioUsuarioEmMemoria repositorio = new RepositorioUsuarioEmMemoria();
  
-        assertNull(repositorio.buscarPorLogin("naoExiste"));
+        assertThrows(UsuarioNaoEncontradoException.class,
+                () -> repositorio.buscarPorLogin("naoExiste"));
+    }
+
+    // Task 08: a mensagem explica o que aconteceu
+    @Test
+    void mensagemDaExcecaoDeveCitarOLoginBuscado() {
+        RepositorioUsuarioEmMemoria repositorio = new RepositorioUsuarioEmMemoria();
+
+        UsuarioNaoEncontradoException e = assertThrows(UsuarioNaoEncontradoException.class,
+                () -> repositorio.buscarPorLogin("naoExiste"));
+
+        assertTrue(e.getMessage().contains("naoExiste"));
+    }
+
+    // Task 08: ela NÃO é lançada no caminho normal
+    @Test
+    void naoDeveLancarExcecaoAoBuscarPorLoginQueExiste() {
+        RepositorioUsuarioEmMemoria repositorio = new RepositorioUsuarioEmMemoria();
+        Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
+        repositorio.cadastrar(new Usuario(cliente, "victor", "senha1234"));
+
+        assertDoesNotThrow(() -> repositorio.buscarPorLogin("victor"));
     }
  
     @Test
