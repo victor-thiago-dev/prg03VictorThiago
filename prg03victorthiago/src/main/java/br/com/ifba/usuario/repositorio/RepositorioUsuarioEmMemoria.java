@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
 
 /**
  *
@@ -50,6 +51,10 @@ public class RepositorioUsuarioEmMemoria {
  
     //versão 2: usa o Map (O(1) em média - não cresce com o tamanho da lista)
     public Usuario buscarPorLogin(String login) {
-        return porLogin.get(login);
+        Usuario usuario = porLogin.get(login);
+        if (usuario == null) {
+            throw new UsuarioNaoEncontradoException(login);
+        }
+        return usuario;
     }
 }
