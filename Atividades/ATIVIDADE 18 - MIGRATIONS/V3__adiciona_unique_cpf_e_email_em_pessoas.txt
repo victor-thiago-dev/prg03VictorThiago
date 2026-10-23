@@ -1,0 +1,4 @@
+ALTER TABLE pessoas
+    ADD CONSTRAINT uk_pessoas_cpf   UNIQUE (cpf),
+    ADD CONSTRAINT uk_pessoas_email UNIQUE (email);
+ 

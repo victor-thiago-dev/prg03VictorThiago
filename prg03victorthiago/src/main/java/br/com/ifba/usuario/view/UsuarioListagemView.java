@@ -5,6 +5,7 @@
 package br.com.ifba.usuario.view;
 
 import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.infrastructure.util.MigrationRunner;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
@@ -156,6 +157,15 @@ public class UsuarioListagemView extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UsuarioListagemView().setVisible(true));
+    try {
+        MigrationRunner.migrar(); // 1º: banco atualizado
+    } catch (RuntimeException e) {
+        JOptionPane.showMessageDialog(null,
+                "Falha ao atualizar o banco: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
     }
+    // 2º: só depois a aplicação sobe
+    SwingUtilities.invokeLater(() -> new UsuarioListagemView().setVisible(true));
+}
 }
