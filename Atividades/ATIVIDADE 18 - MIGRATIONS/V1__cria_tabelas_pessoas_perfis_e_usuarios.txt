@@ -1,0 +1,28 @@
+CREATE TABLE pessoas (
+    id            BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    tipo_pessoa   VARCHAR(31)  NOT NULL,
+    nome          VARCHAR(100) NOT NULL,
+    cpf           VARCHAR(14)  NOT NULL,
+    telefone      VARCHAR(20),
+    email         VARCHAR(100) NOT NULL,
+    especialidade VARCHAR(100)   -- só o Barbeiro usa; Cliente e Admin deixam NULL
+);
+ 
+CREATE TABLE perfis (
+    id        BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    nome      VARCHAR(50)  NOT NULL,
+    descricao VARCHAR(255),
+    CONSTRAINT uk_perfis_nome UNIQUE (nome)
+);
+ 
+CREATE TABLE usuarios (
+    id        BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    login     VARCHAR(50)  NOT NULL,
+    senha     VARCHAR(255) NOT NULL,
+    status    ENUM('ATIVO', 'INATIVO') NOT NULL,
+    pessoa_id BIGINT       NOT NULL,
+    CONSTRAINT uk_usuarios_login  UNIQUE (login),
+    CONSTRAINT fk_usuarios_pessoa FOREIGN KEY (pessoa_id) REFERENCES pessoas (id)
+);
+ 
+
