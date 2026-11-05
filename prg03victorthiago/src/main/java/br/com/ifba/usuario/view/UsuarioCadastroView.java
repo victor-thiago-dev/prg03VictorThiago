@@ -7,9 +7,7 @@ package br.com.ifba.usuario.view;
 import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
-import br.com.ifba.usuario.repositorio.UsuarioRepositorioJpa;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
-import jakarta.persistence.PersistenceException;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -25,10 +23,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import br.com.ifba.infrastructure.exception.PersistenciaException;
+import br.com.ifba.usuario.dao.UsuarioDao;
+import br.com.ifba.usuario.dao.UsuarioIDao;
 
 public class UsuarioCadastroView extends JDialog {
 
-    private final UsuarioRepositorioJpa repositorio = new UsuarioRepositorioJpa();
+     private final UsuarioIDao usuarioDao = new UsuarioDao();
 
     private final JTextField txtNome = new JTextField(20);
     private final JTextField txtCpf = new JTextField(20);
@@ -120,18 +121,17 @@ public class UsuarioCadastroView extends JDialog {
         }
 
         try {
+            if (usuarioDao.existsByLogin(login)) {
+                aviso("Já existe um usuário com esse login.");
+                return;
+            }
             Usuario usuario = new Usuario(new Cliente(nome, cpf, telefone, email), login, senha);
             usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
-            repositorio.cadastrar(usuario);
+            usuarioDao.save(usuario);
             JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso.");
             dispose();
-        } catch (IllegalArgumentException e) {
-            aviso(e.getMessage());
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Não foi possível salvar. Verifique se CPF, e-mail ou login já estão "
-                    + "cadastrados e se o banco de dados está acessível.",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenciaException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
