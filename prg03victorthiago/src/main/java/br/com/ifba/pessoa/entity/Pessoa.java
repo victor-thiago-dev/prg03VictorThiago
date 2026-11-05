@@ -4,6 +4,7 @@
  */
 package br.com.ifba.pessoa.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -22,11 +23,8 @@ import jakarta.persistence.Table;
 @Table(name = "pessoas")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_pessoa")
-public abstract class Pessoa {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public abstract class Pessoa extends PersistenceEntity {
+
 
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
@@ -48,10 +46,6 @@ public abstract class Pessoa {
         this.cpf = cpf;
         this.telefone = telefone;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
     }
     
     public abstract String descreverFuncao();
