@@ -4,6 +4,7 @@
  */
 package br.com.ifba.usuario.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import br.com.ifba.usuario.interfaces.Autenticavel;
 import java.util.List;
 import java.util.Collections;
@@ -27,11 +28,7 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario implements Autenticavel {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Usuario extends PersistenceEntity implements Autenticavel {
 
     @Column(name = "login", nullable = false, unique = true, length = 50)
     private String login;
@@ -81,10 +78,6 @@ public class Usuario implements Autenticavel {
                 perfilAtivo = perfil;
             }
         }
-    }
-    
-    public Long getId() {
-        return id;
     }
  
     public List<Perfil> getPerfis() {

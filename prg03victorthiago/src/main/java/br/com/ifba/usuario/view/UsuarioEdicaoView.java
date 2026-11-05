@@ -6,8 +6,6 @@ package br.com.ifba.usuario.view;
 
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
-import br.com.ifba.usuario.repositorio.UsuarioRepositorioJpa;
-import jakarta.persistence.PersistenceException;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -22,10 +20,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import br.com.ifba.infrastructure.exception.PersistenciaException;
+import br.com.ifba.usuario.dao.UsuarioDao;
+import br.com.ifba.usuario.dao.UsuarioIDao;
+import br.com.ifba.usuario.entity.Usuario;
 
 public class UsuarioEdicaoView extends JDialog {
 
-    private final UsuarioRepositorioJpa repositorio = new UsuarioRepositorioJpa();
+    private final UsuarioIDao usuarioDao = new UsuarioDao();
 
     private final JTextField txtLogin = new JTextField(20);
     private final JTextField txtNome = new JTextField(20);
@@ -82,23 +84,24 @@ public class UsuarioEdicaoView extends JDialog {
         painel.add(campo, c);
     }
 
-    private void salvar() {
+     private void salvar() {
         String nome = txtNome.getText().trim();
         if (nome.isEmpty()) {
             aviso("Preencha o nome.");
             return;
         }
         try {
-            repositorio.atualizar(txtLogin.getText(), nome, (StatusUsuario) cmbStatus.getSelectedItem());
+            Usuario usuario = usuarioDao.findByLogin(txtLogin.getText());
+            usuario.getPessoa().setNome(nome);
+            usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
+            usuarioDao.update(usuario);
             JOptionPane.showMessageDialog(this, "Usuário atualizado com sucesso.");
             dispose();
         } catch (UsuarioNaoEncontradoException e) {
             aviso(e.getMessage());
             dispose(); // o usuário não existe mais: a listagem recarrega
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Não foi possível atualizar. Verifique se o banco de dados está acessível.",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenciaException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
