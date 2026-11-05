@@ -14,6 +14,8 @@
         <class>br.com.ifba.pessoa.entity.Admin</class>
         <class>br.com.ifba.usuario.entity.Perfil</class>
         <class>br.com.ifba.usuario.entity.Usuario</class>
+        <class>br.com.ifba.infrastructure.entity.PersistenceEntity</class>
+    </persistence-unit>
 
         <properties>
             <!-- DADOS DA CONEXÃO (preencha user e password no seu persistence.xml local) -->
