@@ -3,14 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.view;
-
+import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.infrastructure.util.JPAUtil;
 import br.com.ifba.infrastructure.util.MigrationRunner;
+import br.com.ifba.usuario.dao.UsuarioDao;
+import br.com.ifba.usuario.dao.UsuarioIDao;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
-import br.com.ifba.usuario.repositorio.UsuarioRepositorioJpa;
-import jakarta.persistence.PersistenceException;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class UsuarioListagemView extends JFrame {
 
-    private final UsuarioRepositorioJpa repositorio = new UsuarioRepositorioJpa();
+    private final UsuarioIDao usuarioDao = new UsuarioDao();
 
     private final DefaultTableModel modelo = new DefaultTableModel(
             new Object[]{"Login", "Nome", "Status"}, 0) {
@@ -64,7 +64,6 @@ public class UsuarioListagemView extends JFrame {
     }
 
     private void montarTela() {
-        // topo: busca + botão de novo cadastro
         JPanel topo = new JPanel(new BorderLayout(10, 0));
         topo.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
         JPanel busca = new JPanel(new BorderLayout(5, 0));
@@ -74,11 +73,9 @@ public class UsuarioListagemView extends JFrame {
         topo.add(busca, BorderLayout.CENTER);
         topo.add(btnNovo, BorderLayout.EAST);
 
-        // centro: tabela
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        // rodapé: editar / remover a linha selecionada
         JPanel rodape = new JPanel();
         rodape.add(btnEditar);
         rodape.add(btnRemover);
@@ -88,32 +85,29 @@ public class UsuarioListagemView extends JFrame {
         add(rodape, BorderLayout.SOUTH);
 
         btnBuscar.addActionListener(e -> carregar());
-        txtBusca.addActionListener(e -> carregar()); // Enter no campo
+        txtBusca.addActionListener(e -> carregar());
         btnNovo.addActionListener(e -> abrirCadastro());
         btnEditar.addActionListener(e -> editar());
         btnRemover.addActionListener(e -> remover());
     }
 
-    // lista tudo, ou busca por JPQL se houver texto no campo
     private void carregar() {
         String texto = txtBusca.getText().trim();
         modelo.setRowCount(0);
         try {
             List<Usuario> usuarios = texto.isEmpty()
-                    ? repositorio.listarTodos()
-                    : repositorio.buscarPorTexto(texto);
+                    ? usuarioDao.findAll()
+                    : usuarioDao.findByLoginOrNome(texto);
             for (Usuario u : usuarios) {
                 modelo.addRow(new Object[]{u.getLogin(), u.getPessoa().getNome(), u.getStatus().name()});
             }
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Não foi possível carregar os usuários. Verifique se o banco de dados está acessível.",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenciaException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void abrirCadastro() {
-        new UsuarioCadastroView(this).setVisible(true); // modal: continua aqui ao fechar
+        new UsuarioCadastroView(this).setVisible(true);
         carregar();
     }
 
@@ -144,28 +138,26 @@ public class UsuarioListagemView extends JFrame {
             return;
         }
         try {
-            repositorio.remover(login);
+            usuarioDao.delete(usuarioDao.findByLogin(login));
             JOptionPane.showMessageDialog(this, "Usuário removido com sucesso.");
         } catch (UsuarioNaoEncontradoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Não foi possível remover. Verifique se o banco de dados está acessível.",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (PersistenciaException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         carregar();
     }
 
     public static void main(String[] args) {
-    try {
-        MigrationRunner.migrar(); // 1º: banco atualizado
-    } catch (RuntimeException e) {
-        JOptionPane.showMessageDialog(null,
-                "Falha ao atualizar o banco: " + e.getMessage(),
-                "Erro", JOptionPane.ERROR_MESSAGE);
-        System.exit(1);
+        try {
+            MigrationRunner.migrar(); // 1º: banco atualizado
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Falha ao atualizar o banco: " + e.getMessage(),
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+        // 2º: só depois a aplicação sobe
+        SwingUtilities.invokeLater(() -> new UsuarioListagemView().setVisible(true));
     }
-    // 2º: só depois a aplicação sobe
-    SwingUtilities.invokeLater(() -> new UsuarioListagemView().setVisible(true));
-}
 }
