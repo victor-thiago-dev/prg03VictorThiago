@@ -3,17 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.view;
+
 import br.com.ifba.infrastructure.exception.PersistenciaException;
-import br.com.ifba.infrastructure.util.JPAUtil;
-import br.com.ifba.infrastructure.util.MigrationRunner;
-import br.com.ifba.usuario.dao.UsuarioDao;
-import br.com.ifba.usuario.dao.UsuarioIDao;
+import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
 import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,12 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class UsuarioListagemView extends JFrame {
 
-    private final UsuarioIDao usuarioDao = new UsuarioDao();
+    private final UsuarioIController controller;
 
     private final DefaultTableModel modelo = new DefaultTableModel(
             new Object[]{"Login", "Nome", "Status"}, 0) {
@@ -45,21 +40,13 @@ public class UsuarioListagemView extends JFrame {
     private final JButton btnEditar = new JButton("Editar");
     private final JButton btnRemover = new JButton("Remover");
 
-    public UsuarioListagemView() {
+    public UsuarioListagemView(UsuarioIController controller) {
         super("Usuários");
+        this.controller = controller; // recebe, não cria
         montarTela();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(650, 400);
         setLocationRelativeTo(null);
-
-        // fecha a fábrica do JPA ao encerrar a aplicação
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                JPAUtil.fechar();
-            }
-        });
-
         carregar();
     }
 
@@ -91,13 +78,11 @@ public class UsuarioListagemView extends JFrame {
         btnRemover.addActionListener(e -> remover());
     }
 
+    // busca em branco = lista tudo (essa regra é do Service)
     private void carregar() {
-        String texto = txtBusca.getText().trim();
         modelo.setRowCount(0);
         try {
-            List<Usuario> usuarios = texto.isEmpty()
-                    ? usuarioDao.findAll()
-                    : usuarioDao.findByLoginOrNome(texto);
+            List<Usuario> usuarios = controller.findByLoginOrNome(txtBusca.getText());
             for (Usuario u : usuarios) {
                 modelo.addRow(new Object[]{u.getLogin(), u.getPessoa().getNome(), u.getStatus().name()});
             }
@@ -107,7 +92,7 @@ public class UsuarioListagemView extends JFrame {
     }
 
     private void abrirCadastro() {
-        new UsuarioCadastroView(this).setVisible(true);
+        new UsuarioCadastroView(this, controller).setVisible(true);
         carregar();
     }
 
@@ -120,7 +105,7 @@ public class UsuarioListagemView extends JFrame {
         String login = (String) modelo.getValueAt(linha, 0);
         String nome = (String) modelo.getValueAt(linha, 1);
         StatusUsuario status = StatusUsuario.valueOf((String) modelo.getValueAt(linha, 2));
-        new UsuarioEdicaoView(this, login, nome, status).setVisible(true);
+        new UsuarioEdicaoView(this, controller, login, nome, status).setVisible(true);
         carregar();
     }
 
@@ -138,7 +123,7 @@ public class UsuarioListagemView extends JFrame {
             return;
         }
         try {
-            usuarioDao.delete(usuarioDao.findByLogin(login));
+            controller.delete(controller.findByLogin(login));
             JOptionPane.showMessageDialog(this, "Usuário removido com sucesso.");
         } catch (UsuarioNaoEncontradoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
@@ -146,18 +131,5 @@ public class UsuarioListagemView extends JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         carregar();
-    }
-
-    public static void main(String[] args) {
-        try {
-            MigrationRunner.migrar(); // 1º: banco atualizado
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Falha ao atualizar o banco: " + e.getMessage(),
-                    "Erro", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
-        // 2º: só depois a aplicação sobe
-        SwingUtilities.invokeLater(() -> new UsuarioListagemView().setVisible(true));
     }
 }

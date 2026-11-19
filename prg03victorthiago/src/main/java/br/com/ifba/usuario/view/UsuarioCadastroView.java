@@ -4,7 +4,10 @@ package br.com.ifba.usuario.view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+import br.com.ifba.infrastructure.exception.NegocioException;
+import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.pessoa.entity.Cliente;
+import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
@@ -23,13 +26,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import br.com.ifba.infrastructure.exception.PersistenciaException;
-import br.com.ifba.usuario.dao.UsuarioDao;
-import br.com.ifba.usuario.dao.UsuarioIDao;
 
 public class UsuarioCadastroView extends JDialog {
 
-     private final UsuarioIDao usuarioDao = new UsuarioDao();
+    private final UsuarioIController controller;
 
     private final JTextField txtNome = new JTextField(20);
     private final JTextField txtCpf = new JTextField(20);
@@ -42,8 +42,9 @@ public class UsuarioCadastroView extends JDialog {
     private final JButton btnSalvar = new JButton("Salvar");
     private final JButton btnCancelar = new JButton("Cancelar");
 
-    public UsuarioCadastroView(Frame parent) {
+    public UsuarioCadastroView(Frame parent, UsuarioIController controller) {
         super(parent, "Cadastrar usuário", true);
+        this.controller = controller; // recebe, não cria
         montarTela();
         pack();
         setLocationRelativeTo(parent);
@@ -99,20 +100,9 @@ public class UsuarioCadastroView extends JDialog {
         String senha = new String(txtSenha.getPassword());
         String confirmar = new String(txtConfirmarSenha.getPassword());
 
-        if (!ValidadorUsuario.camposPreenchidos(nome, cpf, telefone, email, login)) {
+        // validações de tela: só feedback imediato (a garantia está no Service)
+        if (!ValidadorUsuario.camposPreenchidos(nome, cpf, telefone, email, login, senha)) {
             aviso("Preencha todos os campos.");
-            return;
-        }
-        if (!ValidadorUsuario.cpfValido(cpf)) {
-            aviso("CPF inválido.");
-            return;
-        }
-        if (ValidadorUsuario.contemPalavraProibida(login)) {
-            aviso("Login contém palavra não permitida.");
-            return;
-        }
-        if (!ValidadorUsuario.senhaForte(senha)) {
-            aviso("A senha deve ter no mínimo " + ValidadorUsuario.TAMANHO_MINIMO_SENHA + " caracteres.");
             return;
         }
         if (!ValidadorUsuario.senhasIguais(senha, confirmar)) {
@@ -121,15 +111,13 @@ public class UsuarioCadastroView extends JDialog {
         }
 
         try {
-            if (usuarioDao.existsByLogin(login)) {
-                aviso("Já existe um usuário com esse login.");
-                return;
-            }
             Usuario usuario = new Usuario(new Cliente(nome, cpf, telefone, email), login, senha);
             usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
-            usuarioDao.save(usuario);
+            controller.save(usuario);
             JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso.");
             dispose();
+        } catch (NegocioException e) {
+            aviso(e.getMessage());
         } catch (PersistenciaException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
