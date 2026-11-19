@@ -4,10 +4,18 @@
 
 package com.mycompany.prg03victorthiago;
 
-import br.com.ifba.pessoa.entity.Admin;
-import br.com.ifba.pessoa.entity.Barbeiro;
-import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.pessoa.entity.Pessoa;
+import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.infrastructure.util.MigrationRunner;
+import br.com.ifba.usuario.controller.UsuarioController;
+import br.com.ifba.usuario.controller.UsuarioIController;
+import br.com.ifba.usuario.dao.UsuarioDao;
+import br.com.ifba.usuario.dao.UsuarioIDao;
+import br.com.ifba.usuario.service.UsuarioIService;
+import br.com.ifba.usuario.service.UsuarioService;
+import br.com.ifba.usuario.view.UsuarioListagemView;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -18,17 +26,25 @@ public class Prg03victorthiago {
         return pessoa.descreverFuncao();
     }
     
-    public static void main(String[] args) {
-        Pessoa administrador = new Admin("Victor", "11111111111", "74999999999", "123@gmail.com");
-        Pessoa barbeiro = new Barbeiro("Thiago", "11111111111", "74999999999", "123@gmail.com", "Corte Masculino");
-        Pessoa cliente = new Cliente("Maria", "11111111111", "74999999999", "123@gmail.com");
-        
-        System.out.println(administrador.descreverFuncao());
-        System.out.println(barbeiro.descreverFuncao());
-        System.out.println(cliente.descreverFuncao());
-        
-        System.out.println(apresentarPessoa(cliente));
-        System.out.println(apresentarPessoa(barbeiro));
-        
+    public static void main(String[] args) { 
+         // 1º: banco atualizado (Flyway)
+         try {
+            MigrationRunner.migrar();
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Falha ao atualizar o banco: " + e.getMessage(),
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(JPAUtil::fechar));
+
+        // 2º: monta a pilha, de baixo para cima: DAO -> Service -> Controller -> tela
+        UsuarioIDao dao = new UsuarioDao();
+        UsuarioIService service = new UsuarioService(dao);
+        UsuarioIController controller = new UsuarioController(service);
+
+        SwingUtilities.invokeLater(() -> new UsuarioListagemView(controller).setVisible(true));
     }
+        
+    
 }

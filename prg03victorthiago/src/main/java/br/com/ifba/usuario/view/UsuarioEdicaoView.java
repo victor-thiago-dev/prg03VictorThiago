@@ -4,7 +4,11 @@
  */
 package br.com.ifba.usuario.view;
 
+import br.com.ifba.infrastructure.exception.NegocioException;
+import br.com.ifba.infrastructure.exception.PersistenciaException;
+import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
 import java.awt.BorderLayout;
 import java.awt.Frame;
@@ -20,14 +24,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import br.com.ifba.infrastructure.exception.PersistenciaException;
-import br.com.ifba.usuario.dao.UsuarioDao;
-import br.com.ifba.usuario.dao.UsuarioIDao;
-import br.com.ifba.usuario.entity.Usuario;
 
 public class UsuarioEdicaoView extends JDialog {
 
-    private final UsuarioIDao usuarioDao = new UsuarioDao();
+    private final UsuarioIController controller;
 
     private final JTextField txtLogin = new JTextField(20);
     private final JTextField txtNome = new JTextField(20);
@@ -35,8 +35,10 @@ public class UsuarioEdicaoView extends JDialog {
     private final JButton btnSalvar = new JButton("Salvar");
     private final JButton btnCancelar = new JButton("Cancelar");
 
-    public UsuarioEdicaoView(Frame parent, String login, String nome, StatusUsuario status) {
+    public UsuarioEdicaoView(Frame parent, UsuarioIController controller,
+            String login, String nome, StatusUsuario status) {
         super(parent, "Editar usuário", true);
+        this.controller = controller; // recebe, não cria
 
         txtLogin.setText(login);
         txtLogin.setEditable(false); // login não pode ser alterado
@@ -84,19 +86,16 @@ public class UsuarioEdicaoView extends JDialog {
         painel.add(campo, c);
     }
 
-     private void salvar() {
-        String nome = txtNome.getText().trim();
-        if (nome.isEmpty()) {
-            aviso("Preencha o nome.");
-            return;
-        }
+    private void salvar() {
         try {
-            Usuario usuario = usuarioDao.findByLogin(txtLogin.getText());
-            usuario.getPessoa().setNome(nome);
+            Usuario usuario = controller.findByLogin(txtLogin.getText());
+            usuario.getPessoa().setNome(txtNome.getText().trim());
             usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
-            usuarioDao.update(usuario);
+            controller.update(usuario);
             JOptionPane.showMessageDialog(this, "Usuário atualizado com sucesso.");
             dispose();
+        } catch (NegocioException e) {
+            aviso(e.getMessage());
         } catch (UsuarioNaoEncontradoException e) {
             aviso(e.getMessage());
             dispose(); // o usuário não existe mais: a listagem recarrega
