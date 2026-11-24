@@ -4,6 +4,8 @@
  */
 package br.com.ifba.usuario.validar;
 
+import br.com.ifba.pessoa.validar.ValidadorCpf;
+
 /**
  *
  * @author victo
@@ -43,11 +45,7 @@ public class ValidadorUsuario {
  
     // aceita 11 dígitos, com ou sem pontos e traço (123.456.789-01)
     public static boolean cpfValido(String cpf) {
-        if (cpf == null) {
-            return false;
-        }
-        String limpo = cpf.trim().replaceAll("[.\\-]", "");
-        return limpo.matches("\\d{11}");
+        return ValidadorCpf.valido(cpf);
     }
  
     public static boolean senhaForte(String senha) {
