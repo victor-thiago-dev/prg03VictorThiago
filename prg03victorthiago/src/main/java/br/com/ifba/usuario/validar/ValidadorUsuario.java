@@ -18,11 +18,10 @@ public class ValidadorUsuario {
         if (texto == null) {
         return false;
         }
-        //declara array com palavras proibidas
         String[] palavrasProibidas = {"admin", "administrador", "root", "support", "moderator", "webmaster",
         "teste", "senha123"};
-        //compara se o texto é igual a alguma palavra proibida
         for (String palavraProibida : palavrasProibidas) {
+            // ignora maiúsculas: "Admin" e "ADMIN" não podem se passar por "admin"
             if(texto.equalsIgnoreCase(palavraProibida)){
                 return true;
             }
