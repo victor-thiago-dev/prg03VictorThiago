@@ -92,27 +92,40 @@ public class UsuarioCadastroView extends JDialog {
     }
 
     private void salvar() {
-        String nome = txtNome.getText().trim();
-        String cpf = txtCpf.getText().trim();
-        String telefone = txtTelefone.getText().trim();
-        String email = txtEmail.getText().trim();
-        String login = txtLogin.getText().trim();
-        String senha = new String(txtSenha.getPassword());
-        String confirmar = new String(txtConfirmarSenha.getPassword());
-
-        // validações de tela: só feedback imediato (a garantia está no Service)
-        if (!ValidadorUsuario.camposPreenchidos(nome, cpf, telefone, email, login, senha)) {
+        if (existeCampoEmBranco()) {
             aviso("Preencha todos os campos.");
             return;
         }
-        if (!ValidadorUsuario.senhasIguais(senha, confirmar)) {
+        if (!senhasConferem()) {
             aviso("As senhas não conferem.");
             return;
         }
+        gravar(montarUsuario());
+    }
 
+    private boolean existeCampoEmBranco() {
+        return !ValidadorUsuario.camposPreenchidos(txtNome.getText(), txtCpf.getText(),
+                txtTelefone.getText(), txtEmail.getText(), txtLogin.getText(), lerSenha());
+    }
+
+    private boolean senhasConferem() {
+        return ValidadorUsuario.senhasIguais(lerSenha(), new String(txtConfirmarSenha.getPassword()));
+    }
+
+    private String lerSenha() {
+        return new String(txtSenha.getPassword());
+    }
+
+    private Usuario montarUsuario() {
+        Cliente cliente = new Cliente(txtNome.getText().trim(), txtCpf.getText().trim(),
+                txtTelefone.getText().trim(), txtEmail.getText().trim());
+        Usuario usuario = new Usuario(cliente, txtLogin.getText().trim(), lerSenha());
+        usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
+        return usuario;
+    }
+
+    private void gravar(Usuario usuario) {
         try {
-            Usuario usuario = new Usuario(new Cliente(nome, cpf, telefone, email), login, senha);
-            usuario.setStatus((StatusUsuario) cmbStatus.getSelectedItem());
             controller.save(usuario);
             JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso.");
             dispose();
