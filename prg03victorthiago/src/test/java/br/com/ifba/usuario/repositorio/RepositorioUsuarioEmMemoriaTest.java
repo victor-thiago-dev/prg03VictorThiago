@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class RepositorioUsuarioEmMemoriaTest {
  
     @Test
-    void deveApareceEmListarTodosAoCadastrarUmUsuario() {
+    void deveAparecerEmListarTodosAoCadastrarUmUsuario() {
         RepositorioUsuarioEmMemoria repositorio = new RepositorioUsuarioEmMemoria();
         Cliente cliente = new Cliente("Victor", "12345678901", "77999990000", "victor@email.com");
         Usuario usuario = new Usuario(cliente, "victor", "senha1234");

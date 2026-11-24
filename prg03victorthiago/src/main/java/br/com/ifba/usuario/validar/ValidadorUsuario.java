@@ -4,6 +4,8 @@
  */
 package br.com.ifba.usuario.validar;
 
+import br.com.ifba.pessoa.validar.ValidadorCpf;
+
 /**
  *
  * @author victo
@@ -16,11 +18,10 @@ public class ValidadorUsuario {
         if (texto == null) {
         return false;
         }
-        //declara array com palavras proibidas
         String[] palavrasProibidas = {"admin", "administrador", "root", "support", "moderator", "webmaster",
         "teste", "senha123"};
-        //compara se o texto é igual a alguma palavra proibida
         for (String palavraProibida : palavrasProibidas) {
+            // ignora maiúsculas: "Admin" e "ADMIN" não podem se passar por "admin"
             if(texto.equalsIgnoreCase(palavraProibida)){
                 return true;
             }
@@ -43,11 +44,7 @@ public class ValidadorUsuario {
  
     // aceita 11 dígitos, com ou sem pontos e traço (123.456.789-01)
     public static boolean cpfValido(String cpf) {
-        if (cpf == null) {
-            return false;
-        }
-        String limpo = cpf.trim().replaceAll("[.\\-]", "");
-        return limpo.matches("\\d{11}");
+        return ValidadorCpf.valido(cpf);
     }
  
     public static boolean senhaForte(String senha) {

@@ -23,13 +23,13 @@ import org.junit.jupiter.api.Test;
 class GenericDaoTest {
 
     // EntityManager de mentira: só anota o que o DAO chamou, sem tocar em banco
-    private static class EmFalso {
+    private static class EntityManagerFalso {
 
         final List<String> chamadas = new ArrayList<>();
         private final boolean falharNoPersist;
         private boolean transacaoAtiva = false;
 
-        EmFalso(boolean falharNoPersist) {
+        EntityManagerFalso(boolean falharNoPersist) {
             this.falharNoPersist = falharNoPersist;
         }
 
@@ -85,7 +85,7 @@ class GenericDaoTest {
 
     @Test
     void saveDeveLancarPersistenciaExceptionQuandoOPersistFalha() {
-        EmFalso em = new EmFalso(true);
+        EntityManagerFalso em = new EntityManagerFalso(true);
         GenericDao<Usuario> dao = new GenericDao<>(Usuario.class, em::criar);
 
         assertThrows(PersistenciaException.class, () -> dao.save(novoUsuario()));
@@ -96,7 +96,7 @@ class GenericDaoTest {
 
     @Test
     void saveNaoDeveLancarExcecaoNoCaminhoNormal() {
-        EmFalso em = new EmFalso(false);
+        EntityManagerFalso em = new EntityManagerFalso(false);
         GenericDao<Usuario> dao = new GenericDao<>(Usuario.class, em::criar);
 
         assertDoesNotThrow(() -> dao.save(novoUsuario()));
@@ -105,7 +105,7 @@ class GenericDaoTest {
 
     @Test
     void deleteDeveLancarPersistenciaExceptionQuandoORegistroNaoExiste() {
-        EmFalso em = new EmFalso(false);
+        EntityManagerFalso em = new EntityManagerFalso(false);
         GenericDao<Usuario> dao = new GenericDao<>(Usuario.class, em::criar);
         Usuario usuario = novoUsuario();
         usuario.setId(99L);
@@ -117,7 +117,7 @@ class GenericDaoTest {
 
     @Test
     void updateDeveLancarPersistenciaExceptionQuandoOUsuarioNaoFoiSalvo() {
-        EmFalso em = new EmFalso(false);
+        EntityManagerFalso em = new EntityManagerFalso(false);
         GenericDao<Usuario> dao = new GenericDao<>(Usuario.class, em::criar);
 
         assertThrows(PersistenciaException.class, () -> dao.update(novoUsuario()));
@@ -125,7 +125,7 @@ class GenericDaoTest {
 
     @Test
     void mensagemDaExcecaoDeveCitarAEntidade() {
-        EmFalso em = new EmFalso(true);
+        EntityManagerFalso em = new EntityManagerFalso(true);
         GenericDao<Usuario> dao = new GenericDao<>(Usuario.class, em::criar);
 
         PersistenciaException e = assertThrows(PersistenciaException.class,

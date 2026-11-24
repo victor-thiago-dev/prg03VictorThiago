@@ -57,10 +57,10 @@ public final class MigrationRunner {
             Document doc = fabrica.newDocumentBuilder().parse(in);
  
             Map<String, String> props = new HashMap<>();
-            NodeList nos = doc.getElementsByTagName("property");
-            for (int i = 0; i < nos.getLength(); i++) {
-                Element p = (Element) nos.item(i);
-                props.put(p.getAttribute("name"), p.getAttribute("value"));
+            NodeList elementosProperty = doc.getElementsByTagName("property");
+            for (int i = 0; i < elementosProperty.getLength(); i++) {
+                Element propriedade = (Element) elementosProperty.item(i);
+                props.put(propriedade.getAttribute("name"), propriedade.getAttribute("value"));
             }
             return props;
         } catch (IOException | ParserConfigurationException | SAXException e) {
