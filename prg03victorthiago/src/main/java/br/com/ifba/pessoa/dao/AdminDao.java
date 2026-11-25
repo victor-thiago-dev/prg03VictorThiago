@@ -6,12 +6,15 @@ package br.com.ifba.pessoa.dao;
 
 import br.com.ifba.infrastructure.dao.GenericDao;
 import br.com.ifba.pessoa.entity.Admin;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class AdminDao extends GenericDao<Admin> implements AdminIDao {
 
-    public AdminDao() {
-        super(Admin.class);
+    public AdminDao(EntityManagerFactory fabrica) {
+        super(Admin.class, fabrica);
     }
 
     @Override

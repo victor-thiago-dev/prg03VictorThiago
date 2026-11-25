@@ -8,12 +8,15 @@ import br.com.ifba.infrastructure.dao.GenericDao;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.exception.UsuarioNaoEncontradoException;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UsuarioDao extends GenericDao<Usuario> implements UsuarioIDao {
 
-    public UsuarioDao() {
-        super(Usuario.class);
+   public UsuarioDao(EntityManagerFactory fabrica) {
+        super(Usuario.class, fabrica);
     }
 
     @Override
