@@ -8,7 +8,9 @@ import br.com.ifba.pessoa.entity.Admin;
 import br.com.ifba.pessoa.service.AdminIService;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class AdminController implements AdminIController {
 
     private final AdminIService service;

@@ -8,7 +8,9 @@ import br.com.ifba.pessoa.entity.Barbeiro;
 import br.com.ifba.pessoa.service.BarbeiroIService;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class BarbeiroController implements BarbeiroIController {
 
     private final BarbeiroIService service;

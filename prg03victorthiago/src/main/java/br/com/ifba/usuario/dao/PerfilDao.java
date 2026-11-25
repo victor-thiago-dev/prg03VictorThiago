@@ -6,12 +6,15 @@ package br.com.ifba.usuario.dao;
 
 import br.com.ifba.infrastructure.dao.GenericDao;
 import br.com.ifba.usuario.entity.Perfil;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PerfilDao extends GenericDao<Perfil> implements PerfilIDao {
 
-    public PerfilDao() {
-        super(Perfil.class);
+    public PerfilDao(EntityManagerFactory fabrica) {
+        super(Perfil.class, fabrica);
     }
 
     @Override

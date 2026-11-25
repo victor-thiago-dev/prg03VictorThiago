@@ -10,7 +10,9 @@ import br.com.ifba.usuario.entity.Perfil;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PerfilService implements PerfilIService {
 
     private final PerfilIDao dao;

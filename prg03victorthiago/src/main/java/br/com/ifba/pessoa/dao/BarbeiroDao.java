@@ -6,12 +6,15 @@ package br.com.ifba.pessoa.dao;
 
 import br.com.ifba.infrastructure.dao.GenericDao;
 import br.com.ifba.pessoa.entity.Barbeiro;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class BarbeiroDao extends GenericDao<Barbeiro> implements BarbeiroIDao {
 
-    public BarbeiroDao() {
-        super(Barbeiro.class);
+    public BarbeiroDao(EntityManagerFactory fabrica) {
+        super(Barbeiro.class, fabrica);
     }
 
     @Override

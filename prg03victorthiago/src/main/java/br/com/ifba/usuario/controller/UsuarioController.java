@@ -9,7 +9,9 @@ import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.UsuarioIService;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class UsuarioController implements UsuarioIController {
 
     private final UsuarioIService service;

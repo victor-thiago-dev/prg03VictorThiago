@@ -9,7 +9,9 @@ import br.com.ifba.pessoa.dao.AdminIDao;
 import br.com.ifba.pessoa.entity.Admin;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AdminService implements AdminIService {
 
     private final AdminIDao dao;

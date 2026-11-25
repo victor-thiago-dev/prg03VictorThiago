@@ -8,7 +8,9 @@ import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.pessoa.service.ClienteIService;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class ClienteController implements ClienteIController {
 
     private final ClienteIService service;
