@@ -12,6 +12,19 @@
             <url>file:${project.basedir}/lib</url>
         </repository>
     </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.2.5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>unknown.binary</groupId>
@@ -19,34 +32,30 @@
             <version>SNAPSHOT</version>
         </dependency>
 
+        <!-- Spring Boot + JPA/Hibernate (traz o contêiner e a varredura de componentes; não sobe servidor) -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.4.1.Final</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
         </dependency>
 
-        <!-- Atividade 18: Flyway (migrations) -->
+        <!-- Atividade 18: com o Boot, o Flyway roda sozinho ao subir a aplicação -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>10.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
-            <version>10.10.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -62,6 +71,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.mycompany.prg03victorthiago.Prg03victorthiago</exec.mainClass>
+        <exec.mainClass>br.com.ifba.ProjetoApplication</exec.mainClass>
     </properties>
 </project>
