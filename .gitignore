@@ -13,3 +13,4 @@ dist/
 
 # Credenciais do banco (versionar só o .exemplo)
 **/src/main/resources/META-INF/persistence.xml
+**/src/main/resources/application.properties
