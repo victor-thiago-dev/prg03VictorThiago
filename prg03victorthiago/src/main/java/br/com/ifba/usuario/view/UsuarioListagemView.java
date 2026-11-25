@@ -21,7 +21,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UsuarioListagemView extends JFrame {
 
     private final UsuarioIController controller;
