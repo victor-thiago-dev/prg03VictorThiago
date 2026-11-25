@@ -9,7 +9,9 @@ import br.com.ifba.pessoa.dao.ClienteIDao;
 import br.com.ifba.pessoa.entity.Cliente;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ClienteService implements ClienteIService {
 
     private final ClienteIDao dao;
