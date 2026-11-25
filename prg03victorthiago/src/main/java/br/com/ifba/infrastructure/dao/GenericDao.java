@@ -6,20 +6,20 @@ package br.com.ifba.infrastructure.dao;
 
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import br.com.ifba.infrastructure.exception.PersistenciaException;
-import br.com.ifba.infrastructure.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import jakarta.persistence.EntityManagerFactory;
 
 public class GenericDao<Entity extends PersistenceEntity> implements GenericIDao<Entity> {
 
     private final Class<Entity> classeDaEntidade;
     private final Supplier<EntityManager> fornecedorDeEntityManager;
 
-    public GenericDao(Class<Entity> tipo) {
-        this(tipo, JPAUtil::getEntityManager);
+    public GenericDao(Class<Entity> classeDaEntidade, EntityManagerFactory fabrica) {
+        this(classeDaEntidade, fabrica::createEntityManager);
     }
 
     // permite trocar a origem do EntityManager (usado nos testes, sem banco)
