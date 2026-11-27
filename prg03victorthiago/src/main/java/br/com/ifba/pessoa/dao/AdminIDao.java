@@ -4,11 +4,21 @@
  */
 package br.com.ifba.pessoa.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.pessoa.entity.Admin;
+import java.util.List;
 import java.util.Optional;
 
-public interface AdminIDao extends GenericIDao<Admin> {
+public interface AdminIDao {
+
+    Admin save(Admin admin);
+
+    Admin update(Admin admin);
+
+    void delete(Admin admin);
+
+    Optional<Admin> findById(Long id);
+
+    List<Admin> findAll();
 
     Optional<Admin> findByEmail(String email);
 }

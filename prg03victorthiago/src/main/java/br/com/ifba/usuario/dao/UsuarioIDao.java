@@ -4,12 +4,22 @@
  */
 package br.com.ifba.usuario.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import java.util.List;
+import java.util.Optional;
 
-public interface UsuarioIDao extends GenericIDao<Usuario> {
+public interface UsuarioIDao {
+
+    Usuario save(Usuario usuario);
+    
+    Usuario update(Usuario usuario);
+
+    void delete(Usuario usuario);
+
+    Optional<Usuario> findById(Long id);
+
+    List<Usuario> findAll();
 
     Usuario findByLogin(String login); // lança UsuarioNaoEncontradoException
 

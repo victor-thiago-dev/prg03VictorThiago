@@ -4,11 +4,21 @@
  */
 package br.com.ifba.pessoa.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.pessoa.entity.Pessoa;
+import java.util.List;
 import java.util.Optional;
 
-public interface PessoaIDao extends GenericIDao<Pessoa> {
+public interface PessoaIDao {
+
+    Pessoa save(Pessoa pessoa);
+
+    Pessoa update(Pessoa pessoa);
+
+    void delete(Pessoa pessoa);
+
+    Optional<Pessoa> findById(Long id);
+
+    List<Pessoa> findAll();
 
     Optional<Pessoa> findByCpf(String cpf);
 }

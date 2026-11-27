@@ -4,11 +4,21 @@
  */
 package br.com.ifba.pessoa.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.pessoa.entity.Cliente;
+import java.util.List;
 import java.util.Optional;
 
-public interface ClienteIDao extends GenericIDao<Cliente> {
+public interface ClienteIDao {
+
+    Cliente save(Cliente cliente);
+
+    Cliente update(Cliente cliente);
+
+    void delete(Cliente cliente);
+
+    Optional<Cliente> findById(Long id);
+
+    List<Cliente> findAll();
 
     Optional<Cliente> findByEmail(String email);
 }
