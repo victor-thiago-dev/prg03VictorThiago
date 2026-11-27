@@ -4,11 +4,21 @@
  */
 package br.com.ifba.usuario.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.usuario.entity.Perfil;
+import java.util.List;
 import java.util.Optional;
 
-public interface PerfilIDao extends GenericIDao<Perfil> {
+public interface PerfilIDao {
+
+    Perfil save(Perfil perfil);
+
+    Perfil update(Perfil perfil);
+
+    void delete(Perfil perfil);
+
+    Optional<Perfil> findById(Long id);
+
+    List<Perfil> findAll();
 
     Optional<Perfil> findByNome(String nome);
 }

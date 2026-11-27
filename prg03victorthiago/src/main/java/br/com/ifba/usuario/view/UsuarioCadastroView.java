@@ -5,7 +5,6 @@ package br.com.ifba.usuario.view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 import br.com.ifba.infrastructure.exception.NegocioException;
-import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.pessoa.entity.Cliente;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
@@ -131,8 +130,11 @@ public class UsuarioCadastroView extends JDialog {
             dispose();
         } catch (NegocioException e) {
             aviso(e.getMessage());
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível salvar. Verifique se CPF, e-mail ou login já estão cadastrados "
+                    + "e se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
