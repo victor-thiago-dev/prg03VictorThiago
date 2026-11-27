@@ -4,11 +4,21 @@
  */
 package br.com.ifba.pessoa.dao;
 
-import br.com.ifba.infrastructure.dao.GenericIDao;
 import br.com.ifba.pessoa.entity.Barbeiro;
 import java.util.List;
+import java.util.Optional;
 
-public interface BarbeiroIDao extends GenericIDao<Barbeiro> {
+public interface BarbeiroIDao {
+
+    Barbeiro save(Barbeiro barbeiro);
+
+    Barbeiro update(Barbeiro barbeiro);
+
+    void delete(Barbeiro barbeiro);
+
+    Optional<Barbeiro> findById(Long id);
+
+    List<Barbeiro> findAll();
 
     List<Barbeiro> findByEspecialidade(String especialidade);
 }
