@@ -4,7 +4,6 @@
  */
 package br.com.ifba.usuario.view;
 
-import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
@@ -88,8 +87,10 @@ public class UsuarioListagemView extends JFrame {
             for (Usuario u : usuarios) {
                 modelo.addRow(new Object[]{u.getLogin(), u.getPessoa().getNome(), u.getStatus().name()});
             }
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível carregar os usuarios. Verifique se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -129,8 +130,10 @@ public class UsuarioListagemView extends JFrame {
             JOptionPane.showMessageDialog(this, "Usuário removido com sucesso.");
         } catch (UsuarioNaoEncontradoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível remover. Verifique se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
         }
         carregar();
     }

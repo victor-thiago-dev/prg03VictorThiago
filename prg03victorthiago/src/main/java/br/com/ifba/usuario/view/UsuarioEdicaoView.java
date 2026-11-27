@@ -5,7 +5,6 @@
 package br.com.ifba.usuario.view;
 
 import br.com.ifba.infrastructure.exception.NegocioException;
-import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.StatusUsuario;
 import br.com.ifba.usuario.entity.Usuario;
@@ -99,8 +98,10 @@ public class UsuarioEdicaoView extends JDialog {
         } catch (UsuarioNaoEncontradoException e) {
             aviso(e.getMessage());
             dispose(); // o usuário não existe mais: a listagem recarrega
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Não foi possível atualizar. Verifique se o banco de dados está acessível.",
+                    "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
